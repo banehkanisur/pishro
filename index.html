@@ -81,15 +81,16 @@ dialog textarea{width:100%;padding:10px 12px;border-radius:12px;border:1px solid
 .hint{font-size:11px;color:var(--mu);margin-top:4px;line-height:1.8}
 @media(max-width:640px){.chn{flex-direction:column;align-items:flex-start;padding:18px}.chi{width:56px;height:56px}}
 @media print{.chn{display:none!important}}
-.ann{display:flex;align-items:center;gap:10px;padding:0 12px;height:38px;color:#fff;font-size:13px;background:linear-gradient(90deg,#0ea5e9,#4f46e5)}.ann.t2{background:linear-gradient(90deg,#f59e0b,#ea580c)}.ann.t3{background:linear-gradient(90deg,#dc2626,#9f1239)}.ann[hidden]{display:none}
-.ab{flex:none;font-size:16px}.at{position:relative;flex:1;height:100%;overflow:hidden;direction:ltr}
+.ann{display:flex;align-items:center;gap:10px;padding:0 14px;height:54px;color:#fff;font-size:18px;font-weight:600;background:linear-gradient(90deg,#0ea5e9,#4f46e5)}.ann.t2{background:linear-gradient(90deg,#f59e0b,#ea580c)}.ann.t3{background:linear-gradient(90deg,#dc2626,#9f1239)}.ann[hidden]{display:none}
+.ab{flex:none;font-size:13px;background:#ffffff2e;border-radius:99px;padding:3px 12px;font-weight:700;white-space:nowrap}.at{position:relative;flex:1;height:100%;overflow:hidden;direction:ltr}
 .am{position:absolute;top:0;left:0;height:100%;display:flex;align-items:center;white-space:nowrap;direction:rtl;animation:mq 30s linear infinite;will-change:left,transform}.am:hover,.ann:active .am{animation-play-state:paused}
 .am a{color:#fff;text-decoration:underline}.sep{font-style:normal;margin:0 18px;opacity:.7;font-size:10px}
-.ax{flex:none;border:0;background:#ffffff2b;color:#fff;border-radius:50%;width:22px;height:22px;line-height:1;font-size:16px}
+.ax{flex:none;border:0;background:#ffffff2b;color:#fff;border-radius:50%;width:28px;height:28px;line-height:1;font-size:19px}.annw{position:relative;z-index:1}
+@media(max-width:640px){.ann{height:46px;font-size:15px;gap:8px;padding:0 10px}.ab{font-size:11px;padding:2px 9px}}
 @keyframes mq{from{left:0;transform:translateX(-100%)}to{left:100%;transform:translateX(0)}}
 @media(prefers-reduced-motion:reduce){.am{animation:none;position:static}}
 @media print{.ann{display:none!important}}
-</style></head><body><div id="ann" class="ann" hidden></div>
+</style></head><body><div id="ann" class="annw" hidden></div>
 <div class="hero"><div class="w"><div class="top"><div><h1>🧭 مرکز سامانه‌های پیشرو</h1><div class="sub">همه‌ی لینک‌های کاری، یک‌جا و فهرست کامل، دسته‌بندی‌شده و همیشه به‌روز</div><div class="soc" id="soc"></div></div>
 <div class="tb"><span id="sync" data-s="b">…</span><button data-m="add" class="pri">＋ لینک جدید</button><div class="mw"><button data-m="menu">☰ منو</button><div id="mn" class="mn"><button data-m="login" class="vis"><i>🔐</i>ورود مدیر</button><div class="admm"><button data-m="cats"><i>🗂️</i>مدیریت دسته‌ها</button><button data-m="bans"><i>🖼️</i>مدیریت بنرها</button><button data-m="anns"><i>📢</i>مدیریت اطلاعیه‌ها (نوار متحرک)</button><button data-m="lnk"><i>🔗</i>لینک‌ها و بخش کانال</button><button data-m="txt"><i>✏️</i>ویرایش متن بالا و پایین صفحه</button><button data-m="dedupe"><i>🧹</i>حذف لینک‌های تکراری</button><hr><button data-m="gh"><i>🚀</i>انتشار روی سایت</button><button data-m="pull"><i>⟳</i>دریافت آخرین نسخه‌ی منتشرشده</button><button data-m="ght"><i>🔑</i>تنظیم توکن GitHub</button><button data-m="pub"><i>📤</i>دریافت data.js (دستی)</button><button data-m="exp"><i>⬇</i>پشتیبان JSON</button><button data-m="imp"><i>⬆</i>بازیابی / ورودی</button><button data-m="pw"><i>🔒</i>تغییر رمز مدیر</button><button data-m="logout"><i>🚪</i>خروج از حالت مدیر</button></div><hr><button data-m="print"><i>🖨</i>چاپ / PDF بخش انتخاب‌شده</button><button data-m="theme"><i>🌓</i>حالت تاریک / روشن</button></div></div></div></div></div></div>
 <div class="w" style="padding:0 14px 30px"><div class="stats" id="stats"></div><div id="bn"></div><div class="note" id="tn" hidden></div>
@@ -137,11 +138,11 @@ function chan(){const c=CF('cfg-links'),h=CF('cfg-chan'),f=(h.f||'').split('|').
 const nn=v=>+String(v||'').replace(/[۰-۹]/g,c=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(c));
 const annList=()=>Object.entries(S.banners).filter(([k,b])=>b.ann&&!b.d).map(([k,b])=>({k,...b})).sort((a,b)=>a.u-b.u);
 let asig='';
-function annShow(){const t=now(),L=annList().filter(a=>!a.exp||a.exp>t),el=$('#ann'),sig=JSON.stringify(L.map(a=>[a.k,a.u]))+ADM;if(sig===asig)return;asig=sig;
- if(!L.length||(!ADM&&sessionStorage.annX===sig)){el.hidden=true;return}
- const ty=Math.max(...L.map(a=>a.t||1)),txt=L.map(a=>okU(a.l)?`<a href="${esc(a.l)}" target="_blank" rel="noopener">${esc(a.x)}</a>`:esc(a.x)).join('<i class="sep">◆</i>'),d=Math.max(18,Math.round(L.reduce((n,a)=>n+a.x.length,0)*.22));
- el.className='ann t'+ty;el.hidden=false;el.dataset.sig=sig;
- el.innerHTML=`<span class="ab">${EMO?'📢':'●'}</span><div class="at"><div class="am" style="animation-duration:${d}s">${txt}</div></div><button class="ax" data-m="annx" title="بستن">×</button>`}
+function annShow(){const t=now(),A=annList().filter(a=>!a.exp||a.exp>t),el=$('#ann'),sig=JSON.stringify(A.map(a=>[a.k,a.u]))+ADM;if(sig===asig)return;asig=sig;
+ const LB={3:['🚨','فوری'],2:['⚠️','مهم'],1:['📢','اطلاعیه']};
+ el.innerHTML=[3,2,1].map(ty=>{const L=A.filter(a=>(a.t||1)===ty);if(!L.length)return'';const s=JSON.stringify(L.map(a=>[a.k,a.u]));if(!ADM&&sessionStorage['annX'+ty]===s)return'';
+  const txt=L.map(a=>okU(a.l)?`<a href="${esc(a.l)}" target="_blank" rel="noopener">${esc(a.x)}</a>`:esc(a.x)).join('<i class="sep">◆</i>'),d=Math.max(16,Math.round(L.reduce((n,a)=>n+a.x.length,0)*.25));
+  return `<div class="ann t${ty}" data-s="${esc(s)}"><span class="ab">${EMO?LB[ty][0]+' ':''}${LB[ty][1]}</span><div class="at"><div class="am" style="animation-duration:${d}s">${txt}</div></div><button class="ax" data-m="annx" data-t="${ty}" title="بستن">×</button></div>`}).join('');el.hidden=!el.innerHTML}
 function annL(){$('#al').innerHTML=annList().map(a=>`<div class="ci"><span>${esc(a.x.slice(0,50))}${a.exp&&a.exp<now()?' <small>(منقضی)</small>':''}</span><button data-an="ed" data-k="${esc(a.k)}">✎</button><button data-an="rm" data-k="${esc(a.k)}">🗑</button></div>`).join('')||'<div class="info">اطلاعیه‌ای ثبت نشده</div>'}
 function annEdit(k){const o=S.banners[k]||{};const x=prompt('متن اطلاعیه:',o.x||'');if(!x||!x.trim())return;const l=(prompt('لینک (اختیاری، با https://):',o.l||'')||'').trim();if(l&&!okU(l))return toast('لینک باید با https:// شروع شود');
  const ty=Math.min(3,Math.max(1,nn(prompt('نوع: ۱ = عادی (آبی)، ۲ = مهم (نارنجی)، ۳ = فوری (قرمز)',o.t||1))||1)),dd=nn(prompt('تا چند روز نمایش داده شود؟ (خالی = بدون محدودیت)',''));
@@ -203,7 +204,7 @@ document.addEventListener('click',e=>{if(!e.target.closest('[data-m=menu]'))$('#
  if(d.k){active=d.k;history.replaceState(null,'',d.k==='all'?location.pathname:'#c='+encodeURIComponent(d.k));return render()}
  if(d.a){const id=b.parentNode.dataset.id,l=S.links.find(x=>x.id===id);if(d.a==='fav'){l.fav=!l.fav;l.u=now();change()}if(d.a==='cp')copy(l.url);if(d.a==='ed')openLink(id);if(d.a==='rm'&&confirm('«'+l.title+'» حذف شود؟')){l.d=1;l.u=now();change();toast('حذف شد')}return}
  if(d.lk){copy(location.origin+location.pathname+'#c='+encodeURIComponent(active));return}if(d.ca)return catAct(d.ca,d.c);
- const m=d.m;if(m==='print')window.print();if(m==='annx'){sessionStorage.annX=$('#ann').dataset.sig;$('#ann').hidden=true;return}if(m==='anns'){annL();$('#da').showModal()}if(m==='adda')annEdit();if(m==='chat')return $('#cp').classList.toggle('on');
+ const m=d.m;if(m==='print')window.print();if(m==='annx'){const bar=b.closest('.ann');sessionStorage['annX'+d.t]=bar.dataset.s;bar.remove();if(!$('#ann').children.length)$('#ann').hidden=true;return}if(m==='anns'){annL();$('#da').showModal()}if(m==='adda')annEdit();if(m==='chat')return $('#cp').classList.toggle('on');
  if(m==='share'){const u=location.origin+location.pathname;if(navigator.share)navigator.share({title:document.title,url:u}).catch(()=>{});else copy(u)}
  if(m==='lnk'){const c=CF('cfg-links'),h=CF('cfg-chan');$('#k-tg').value=c.tg||'';$('#k-ru').value=c.ru||'';$('#k-ctg').value=c.ctg||'';$('#k-cru').value=c.cru||'';$('#k-t').value=h.t||'';$('#k-x').value=h.x||'';$('#k-f').value=(h.f||'').split('|').join('\n');$('#dk').showModal()}
  if(m==='savek'){const v=i=>$(i).value.trim(),L=['#k-tg','#k-ru','#k-ctg','#k-cru'].map(v);if(L.some(u=>u&&!okU(u)))return toast('لینک‌ها باید با https:// شروع شوند');const t=now();S.banners['cfg-links']={cfg:1,tg:L[0],ru:L[1],ctg:L[2],cru:L[3],u:t};S.banners['cfg-chan']={cfg:1,t:v('#k-t'),x:v('#k-x'),f:$('#k-f').value.split('\n').map(x=>x.trim()).filter(Boolean).join('|'),u:t};$('#dk').close();change();toast('ذخیره شد')}
