@@ -221,11 +221,12 @@ async function sha(t){try{const b=await crypto.subtle.digest('SHA-256',new TextE
 function fromHash(){const m=(location.hash||'').match(/^#c=(.+)/);if(m){try{const c=decodeURIComponent(m[1]);if(view().cs.includes(c))active=c}catch(e){}}}
 addEventListener('hashchange',()=>{fromHash();render()});
 function mode(){fixIcons();if(innerWidth<640)$('#q').placeholder='جست‌وجو در لینک‌ها…';seedB();document.body.classList.toggle('adm',ADM);setSt('ok',ADM?'🛠️ حالت مدیر':'👁️ نمایش');render()}
-async function login(){const p=prompt('رمز مدیر:');if(p===null)return;if(await sha(p)===PW){ADM=true;sessionStorage.pishroAdm='1';try{const a=JSON.parse(localStorage.pishroAdmin||'null');if(a)S=norm(a)}catch(e){}mode();toast('وارد حالت مدیر شدید')}else toast('رمز اشتباه است')}
+async function login(){const p=prompt('رمز مدیر:');if(p===null)return;if(await sha(p)===PW){ADM=true;sessionStorage.pishroAdm='1';try{const a=JSON.parse(localStorage.pishroAdmin||'null');if(a)S=merge(norm(window.DATA),norm(a))}catch(e){}mode();freshMerge();toast('وارد حالت مدیر شدید')}else toast('رمز اشتباه است')}
 function logout(){ADM=false;sessionStorage.removeItem('pishroAdm');S=norm(window.DATA);mode()}
 async function chpw(){const p=prompt('رمز جدید (حداقل ۶ کاراکتر):');if(!p||p.length<6)return toast('رمز خیلی کوتاه است');PW=await sha(p);localStorage.pishroPw=PW;toast('رمز تغییر کرد؛ فایل انتشار را دوباره بگیرید')}
 function pub(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['window.DATA='+JSON.stringify({...S,pw:PW})+';'],{type:'text/javascript'}));a.download='data.js';a.click();toast('data.js را جایگزین فایل قبلی در GitHub کنید')}
 async function sync(){}
+async function freshMerge(){try{const t=await(await fetch('data.js?'+now(),{cache:'no-store'})).text(),d=JSON.parse(t.replace(/^window\.DATA=/,'').replace(/;\s*$/,'')),m=merge(S,norm(d));if(JSON.stringify(m)!==JSON.stringify(S)){S=m;save();render();toast('آخرین تغییرات منتشرشده اعمال شد')}}catch(e){}}
 const GH=()=>{try{return JSON.parse(localStorage.pishroGh||'null')}catch(e){return null}};
 function ghset(){const g=GH()||{o:'banehkanisur',r:'pishro'};const o=prompt('نام کاربری GitHub:',g.o);if(!o)return;const r=prompt('نام repository:',g.r);if(!r)return;const t=prompt('توکن GitHub (شروع با github_pat_) — خالی بگذارید تا توکن حذف شود:','');localStorage.pishroGh=t?JSON.stringify({o,r,t:t.trim()}):'';toast(t?'ذخیره شد':'توکن حذف شد')}
 async function ghpub(){const g=GH();if(!g||!g.t){toast('اول توکن را تنظیم کنید');return ghset()}
@@ -235,7 +236,7 @@ async function ghpub(){const g=GH();if(!g||!g.t){toast('اول توکن را ت�
  const p=await fetch(u,{method:'PUT',headers:h,body:JSON.stringify({message:'update links '+new Date().toISOString(),content,sha})});if(!p.ok)throw p.status;
  toast('✓ منتشر شد؛ تا ۲ دقیقه دیگر برای همه نمایش داده می‌شود')}catch(e){toast(e===401||e===403?'توکن نامعتبر است یا دسترسی Contents ندارد':e===404?'repository پیدا نشد':'انتشار ناموفق بود (اینترنت؟)')}}
 async function pull(){if(!confirm('تغییرات ذخیره‌نشده‌ی این مرورگر با آخرین نسخه‌ی منتشرشده جایگزین شود؟'))return;try{const t=await(await fetch('data.js?'+now(),{cache:'no-store'})).text();const d=JSON.parse(t.replace(/^window\.DATA=/,'').replace(/;\s*$/,''));S=norm(d);PW=d.pw||PW;localStorage.removeItem('pishroPw');save();render();toast('آخرین نسخه دریافت شد')}catch(e){toast('دریافت ناموفق بود')}}
-(()=>{S=norm(window.DATA);ADM=sessionStorage.pishroAdm==='1';if(ADM){try{const a=JSON.parse(localStorage.pishroAdmin||'null');if(a)S=norm(a)}catch(e){}}
- if(!Object.keys(S.banners).length)DB.forEach((b,i)=>S.banners['bn-'+i]={e:b[0],t:b[1],x:b[2],l:b[3],g:i,u:1});fromHash();mode()})();
+(()=>{S=norm(window.DATA);ADM=sessionStorage.pishroAdm==='1';if(ADM){try{const a=JSON.parse(localStorage.pishroAdmin||'null');if(a)S=merge(norm(window.DATA),norm(a))}catch(e){}}
+ if(!Object.keys(S.banners).length)DB.forEach((b,i)=>S.banners['bn-'+i]={e:b[0],t:b[1],x:b[2],l:b[3],g:i,u:1});fromHash();mode();if(ADM)freshMerge()})();
 if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script></body></html>
